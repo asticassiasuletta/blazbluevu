@@ -1,13 +1,9 @@
-# Random Hentai
-A simple PS Vita homebrew that returns a random hentai picture from [Konachan](http://konachan.com).
+# BlazBlueVU
+A simple PS Vita homebrew that returns a random BlazBlue picture.
 
 That's really it. Do I need to say any more?
 
-![Random Hentai](screenshot.png)
-
 Source updated from the original with extra features.
-
-Uses [Konachan](http://konachan.com) as a source.
 
 ## Controls
 **L Trigger/R Trigger** - Save current image (By ID)
