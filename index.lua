@@ -68,11 +68,11 @@ end
 -- Saves image with the ID as name
 function saveImage()
 	local id = 4
-	if System.doesFileExist("ux0:/data/randomhentai/saved/" .. currentId .. ".jpg") then
+	if System.doesFileExist("ux0:/data/blazbluevu/saved/" .. currentId .. ".jpg") then
 		return id, "Image already saved", 0
 	elseif img ~= nil then
-		local new = System.openFile("ux0:/data/randomhentai/saved/" .. currentId .. ".jpg", FCREATE)
-		System.writeFile(new, image, size2)		-- Image data and Size Loaded in getHentai()
+		local new = System.openFile("ux0:/data/blazbluevu/saved/" .. currentId .. ".jpg", FCREATE)
+		System.writeFile(new, image, size2)		-- Image data and Size Loaded in getImage()
 		System.closeFile(new)
 		return id, "Saved Image as " .. currentId .. ".jpg", 1
 	else	
@@ -80,16 +80,16 @@ function saveImage()
 	end
 end
 -- Gets and loads pictures from decoded JSON
-function getHentai()
-	::gethentai::
+function getImage()
+	::getImage::
 	if Network.isWifiEnabled() then
-		Network.downloadFile("http://konachan.com/post.json?limit=1&tags=+uncensored+-pool:309+order:random+rating:explict", "ux0:/data/randomhentai/post.json")
-		local file1 = System.openFile("ux0:/data/randomhentai/post.json", FREAD)
+		Network.downloadFile("http://konachan.com/post.json?limit=1&tags=+uncensored+-pool:309+order:random+rating:explict", "ux0:/data/blazbluevu/post.json")
+		local file1 = System.openFile("ux0:/data/blazbluevu/post.json", FREAD)
 		local size1 = System.sizeFile(file1)
 		local jsonEncoded = System.readFile(file1, size1)					-- Encoded JSON file data
 		local pcallStat, jsonDecoded = pcall(json.decode, jsonEncoded)		-- Decoded JSON to table
 		System.closeFile(file1)
-		System.deleteFile("ux0:/data/randomhentai/post.json")
+		System.deleteFile("ux0:/data/blazbluevu/post.json")
 		if not pcallStat then
 			jsonValid = pcallStat
 			return
@@ -100,23 +100,23 @@ function getHentai()
 			img = nil
 		end
 		rand = math.random(#jsonDecoded)
-		url = jsonDecoded[1]["sample_url"]
+		url = jsonDecoded[1]["file_url"]
 		fileExt = string.lower(string.sub(url, -4, -1))
 		if fileExt ~= "jpeg" and fileExt ~= ".jpg" then
-			goto gethentai
+			goto getImage
 		end
 		currentId = jsonDecoded[1]["id"]
-		Network.downloadFile(url, "ux0:/data/randomhentai/randomhentai.jpg")
-		local file2 = System.openFile("ux0:/data/randomhentai/randomhentai.jpg", FREAD)
+		Network.downloadFile(url, "ux0:/data/blazbluevu/blazbluevu.jpg")
+		local file2 = System.openFile("ux0:/data/blazbluevu/blazbluevu.jpg", FREAD)
 		size2 = System.sizeFile(file2)
 		if size2 == 0 then
 			System.closeFile(file2)
-			goto gethentai
+			goto getImage
 		end
 		image = System.readFile(file2, size2)
 		System.closeFile(file2)
-		img = Graphics.loadImage("ux0:/data/randomhentai/randomhentai.jpg")
-		System.deleteFile("ux0:/data/randomhentai/randomhentai.jpg")
+		img = Graphics.loadImage("ux0:/data/blazbluevu/blazbluevu.jpg")
+		System.deleteFile("ux0:/data/blazbluevu/blazbluevu.jpg")
 		width = Graphics.getImageWidth(img)
 		height = Graphics.getImageHeight(img)
 		drawWidth = 480 - (width * 544 / height / 2)
@@ -129,16 +129,16 @@ function getHentai()
 	end
 end
 
--- Check if ux0:/data/randomhentai exists
-if not System.doesDirExist("ux0:/data/randomhentai") then
-	System.createDirectory("ux0:/data/randomhentai")
+-- Check if ux0:/data/blazbluevu exists
+if not System.doesDirExist("ux0:/data/blazbluevu") then
+	System.createDirectory("ux0:/data/blazbluevu")
 end
 -- Check if saved folder exists
-if not System.doesDirExist("ux0:/data/randomhentai/saved") then
-	System.createDirectory("ux0:/data/randomhentai/saved")
+if not System.doesDirExist("ux0:/data/blazbluevu/saved") then
+	System.createDirectory("ux0:/data/blazbluevu/saved")
 end
 
-getHentai()
+getImage()
 
 -- Main loop
 while true do
@@ -152,7 +152,7 @@ while true do
 	-- Controls
 	if jsonValid and Network.isWifiEnabled() and img ~= nil then
 		if Controls.check(pad, SCE_CTRL_CROSS) or Controls.check(pad, SCE_CTRL_DOWN) or (autoNext == 1 and time > 0) then
-			getHentai()
+			getImage()
 		elseif Controls.check(pad, SCE_CTRL_CIRCLE) or Controls.check(pad, SCE_CTRL_RIGHT) then
 			if not buttonDown then
 				response = timerIncrease()
@@ -244,3 +244,4 @@ while true do
 	Screen.flip()
 	Screen.waitVblankStart()
 end
+
