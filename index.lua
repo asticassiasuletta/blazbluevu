@@ -83,7 +83,7 @@ end
 function getImage()
 	::getImage::
 	if Network.isWifiEnabled() then
-		Network.downloadFile("http://konachan.com/post.json?limit=1&tags=+uncensored+-pool:309+order:random+rating:explict", "ux0:/data/blazbluevu/post.json")
+		Network.downloadFile("https://gelbooru.com/index.php?page=dapi&s=post&q=index&limit=1&tags=blazblue+sort:random+rating:sensitive&json=1&api_key=694fd2675b5d43f86adc8634cd809892c5946fdc827ffd3d589364dcac79a0072f38b83561592dc4855d436548ff288846d3e0a95fcd01dd7d3f032147bef43f&user_id=1921332", "ux0:/data/blazbluevu/post.json")
 		local file1 = System.openFile("ux0:/data/blazbluevu/post.json", FREAD)
 		local size1 = System.sizeFile(file1)
 		local jsonEncoded = System.readFile(file1, size1)					-- Encoded JSON file data
@@ -244,4 +244,5 @@ while true do
 	Screen.flip()
 	Screen.waitVblankStart()
 end
+
 
